@@ -1,9 +1,10 @@
+#
 *
 !.bashrc
 !.colordiffrc
 !.cshrc
 !.gitignore
-!.home/setup.csh
+!.home/
 !.kshrc
 !.login
 !.profile

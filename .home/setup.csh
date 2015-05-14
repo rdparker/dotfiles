@@ -1,5 +1,6 @@
 #! /bin/csh
 #
+#
 # Setup the home directory to use this git repo for its config files
 #
 # Author: Ron Parker <rdparker@gmail.com>
@@ -25,3 +26,9 @@ if ( x`git config core.worktree`x !~ x\.\./\.\./x ) then
     echo "The git config core.worktree is not set correctly."
     exit 3
 endif
+
+# Checkout what we can without overwriting any existing files.
+git reset --keep
+
+# Report any files that were not checked out.
+git status --short
