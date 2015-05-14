@@ -1,6 +1,12 @@
 Home Directory Configuration Files
 ==================================
 
+Essential configuration files are tracked in git.  Use
+
+	git ls-files
+
+to see which ones.
+
 To install this on a new machine:
 
 	git clone https://github.com/rdparker/dotfiles ~/.home
