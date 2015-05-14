@@ -15,4 +15,13 @@ if ( -e ~/.git ) then
     exit 2
 endif
 
+# Tell the home directory to use this cloned repository.
 echo gitdir: `pwd`/.git > ~/.git
+
+
+# Tell git to check things out to the home directory.
+if ( x`git config core.worktree` =~ x ) git config core.worktree "../../"
+if ( x`git config core.worktree`x !~ x\.\./\.\./x ) then
+    echo "The git config core.worktree is not set correctly."
+    exit 3
+endif
