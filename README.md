@@ -1,5 +1,5 @@
-Home Directory Configuration Files
-==================================
+System Configuration Files
+==========================
 
 Essential configuration files are tracked in git.  Use
 
@@ -13,8 +13,7 @@ To install this on a new machine:
 	cd ~/.home
 	./setup.csh
 
-The setup script will configure the cloned repository to checkout
-files into the home directory and will configure the home directory to
-use the checked out repository.  Then it will safely checkout the
-files without overwriting any preexisting ones and will report all
-files that differ.
+The setup script will configure the cloned repository to checkout files into
+the home directory and will configure the home directory to use the cloned
+repository.  Then it will safely checkout the files without overwriting any
+preexisting ones and will report all files that differ.
