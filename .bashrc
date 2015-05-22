@@ -82,12 +82,44 @@ PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ '
 # Whenever displaying the prompt, write the previous line to disk
 # export PROMPT_COMMAND="history -a"
 
+# Machine specific file loading functionality
+#
+# Get machine name values for looking up system-specific scripts
+if type domainname 2>&1 > /dev/null; then
+    DOMAIN=${DOMAIN:-`domainname | tr [A-Z] [a-z]`}
+    MACHINE=${MACHINE:-`domainname -s | tr [A-Z] [a-z]`}
+    FQDN=${FQDN:-`domainname -f | tr [A-Z] [a-z]`}
+fi
+
+# If a file exists, source it.
+function maybe_source() {
+    [ -f "$1" ] && source "$1"
+}
+
+# Source any public and private versions of the given file.
+function source_some() {
+    local file="$1"
+
+    maybe_source "$HOME/$file"
+    maybe_source "$HOME/.private/$file"
+}
+
+# Source all versions of the file including domain- and machine-specific ones.
+
+function source_all() {
+    local file="$1"
+
+    source_some "$file"
+    [ -n "$DOMAIN" ] && source_some "$DOMAIN/$file"
+    [ -n "$MACHINE" ] && source_some "$MACHINE/$file"
+    [ -n "$MACHINE" ] && source_some "$MACHINE/$file"
+}
+
 # Aliases
 #
 # Some people use a different file for aliases
-# if [ -f "${HOME}/.bash_aliases" ]; then
-#   source "${HOME}/.bash_aliases"
-# fi
+source_all .bash_aliases
+
 #
 # Some example alias instructions
 # If these are enabled they will be used instead of any instructions
