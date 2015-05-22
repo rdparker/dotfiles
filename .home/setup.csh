@@ -1,34 +1,26 @@
 #! /bin/csh
 #
-#
 # Setup the home directory to use this git repo for its config files
 #
 # Author: Ron Parker <rdparker@gmail.com>
-if ( -f ./setup.csh && -o ./setup.csh ) then
-    echo >/dev/null
-else
-    echo "Run this script from directory where it was checked out."
-    exit 1
-endif
 
-if ( -e ~/.git ) then
-    echo "~/.git already exists."
-    exit 2
+# Clone the repository, but don't overwrite anything
+cd ~
+if ( -d .home ) then
+    echo "The ~/.home directory already exists."
+    exit 1
+else
+    git clone --no-checkout --config core.workdir=../../ https://github.com/rdparker/dotfiles .home
 endif
 
 # Tell the home directory to use this cloned repository.
+cd .home/
 echo gitdir: `pwd`/.git > ~/.git
-
-
-# Tell git to check things out to the home directory.
-if ( x`git config core.worktree` =~ x ) git config core.worktree "../../"
-if ( x`git config core.worktree`x !~ x\.\./\.\./x ) then
-    echo "The git config core.worktree is not set correctly."
-    exit 3
-endif
+cd ~
 
 # Checkout what we can without overwriting any existing files.
 git reset --keep
+git status --porcelain | awk '/^ D/{print $2}' | xargs git checkout --
 
 # Report any files that were not checked out.
 git status --short
