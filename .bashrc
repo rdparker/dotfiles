@@ -84,7 +84,9 @@ PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ '
 
 # Machine specific file loading functionality
 #
-# Get machine name values for looking up system-specific scripts
+# Get operating system and machine name values for looking up
+# system-specific scripts.
+SYSTEM=${SYSTEM:-`uname -o | tr [A-Z] [a-z]`}
 if type domainname 2>&1 > /dev/null; then
     DOMAIN=${DOMAIN:-`domainname | tr [A-Z] [a-z]`}
     MACHINE=${MACHINE:-`domainname -s | tr [A-Z] [a-z]`}
@@ -110,6 +112,7 @@ function source_all() {
     local file="$1"
 
     source_some "$file"
+    [ -n "$SYSTEM" ] && source_some "$SYSTEM/$file"
     [ -n "$DOMAIN" ] && source_some "$DOMAIN/$file"
     [ -n "$MACHINE" ] && source_some "$MACHINE/$file"
     [ -n "$MACHINE" ] && source_some "$MACHINE/$file"

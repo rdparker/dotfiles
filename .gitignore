@@ -1,9 +1,11 @@
 *
+!.bash_aliases
 !.bashrc
 !.colordiffrc
 !.cshrc
 !.gitignore
 !.home/
+!.home/*
 !.kshrc
 !.login
 !.profile
