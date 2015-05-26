@@ -103,6 +103,7 @@ function source_some() {
     local file="$1"
 
     maybe_source "$HOME/$file"
+    maybe_source "$HOME/.home/$file"
     maybe_source "$HOME/.private/$file"
 }
 
