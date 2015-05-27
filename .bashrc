@@ -106,6 +106,7 @@ fi
 
 # If a file exists, source it.
 function maybe_source() {
+    echo maybe_source $1
     [ -f "$1" ] && source "$1"
 }
 
@@ -113,7 +114,9 @@ function maybe_source() {
 function source_some() {
     local file="$1"
 
-    maybe_source "$HOME/$file"
+    if [ "`basename $file`" != ".bashrc" ]; then
+	maybe_source "$HOME/$file"
+    fi
     maybe_source "$HOME/.home/$file"
     maybe_source "$HOME/.private/$file"
 }
@@ -129,6 +132,9 @@ function source_all() {
     [ -n "$MACHINE" ] && source_some "$MACHINE/$file"
     [ -n "$MACHINE" ] && source_some "$MACHINE/$file"
 }
+
+# Pickup system-specific .bashrc files
+source_all .bashrc
 
 # Aliases
 #
