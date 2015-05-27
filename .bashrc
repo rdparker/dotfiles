@@ -106,7 +106,6 @@ fi
 
 # If a file exists, source it.
 function maybe_source() {
-    echo maybe_source $1
     [ -f "$1" ] && source "$1"
 }
 
