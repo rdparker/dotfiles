@@ -97,11 +97,11 @@ unset TITLE
 #
 # Get operating system and machine name values for looking up
 # system-specific scripts.
-SYSTEM=${SYSTEM:-`uname -o | tr [A-Z] [a-z]`}
+SYSTEM=${SYSTEM:-`uname -o | tr [A-Z/] [a-z-]`}
 if type domainname 2>&1 > /dev/null; then
-    DOMAIN=${DOMAIN:-`domainname | tr [A-Z] [a-z]`}
-    MACHINE=${MACHINE:-`domainname -s | tr [A-Z] [a-z]`}
-    FQDN=${FQDN:-`domainname -f | tr [A-Z] [a-z]`}
+    DOMAIN=${DOMAIN:-`domainname | tr [A-Z/] [a-z-]`}
+    MACHINE=${MACHINE:-`domainname -s | tr [A-Z/] [a-z-]`}
+    FQDN=${FQDN:-`domainname -f | tr [A-Z/] [a-z-]`}
 fi
 
 # If a file exists, source it.
