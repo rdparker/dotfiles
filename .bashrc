@@ -29,7 +29,18 @@
 source ~/.kshrc
 
 # Set a default prompt of: user@host and current_directory
-PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ '
+#
+# In bash, characters between \[ and \] are treated as non-printing
+# and consume no horizontal space on the screen as far as the shell is
+# concerned.  The rest of the codes should be explained in the "Xterm
+# Control Sequences" document.
+#
+# If we are not in Emacs, set the window and icon title.
+if [ -z "$INSIDE_EMACS" ]; then
+    TITLE="\[\e]0;\w\a\]"
+fi
+PS1="$TITLE"'\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ '
+unset TITLE
 
 # Shell Options
 #
