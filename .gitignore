@@ -1,4 +1,5 @@
 *
+!.aliases
 !.bash_aliases
 !.bashrc
 !.colordiffrc
@@ -10,3 +11,4 @@
 !.login
 !.profile
 !README
+*~
