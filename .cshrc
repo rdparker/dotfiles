@@ -201,5 +201,16 @@ unset manpath
 unset D
 unset M
 
+# Setup editor and alias, preferring emacsclient with a new frame or terminal.
+which emacsclient > /dev/null && setenv EDITOR emacsclient || setenv EDITOR vi
+if ( x$EDITOR =~ xemacsclient ) then
+    if( $?DISPLAY ) then
+	setenv EDITOR "emacsclient -c -a ''"
+    else
+	setenv EDITOR "emacsclient -t -a ''"
+    endif
+endif
+a e "$EDITOR \!*"
+
 top -b -n 1 | head -1 | egrep --color '([1-9][0-9]\.[0-9][0-9]|[3-9]\.[0-9][0-9])' || \
 	top -b -n 1 | head -1
