@@ -1,1 +1,1 @@
-alias tmux \\tmux -L pron a \|\| \\tmux -L pron
+alias tmux \\tmux -L $user a \|\| \\tmux -L $user

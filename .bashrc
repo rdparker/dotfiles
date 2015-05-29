@@ -121,7 +121,6 @@ function source_some() {
 }
 
 # Source all versions of the file including domain- and machine-specific ones.
-
 function source_all() {
     local file="$1"
 
@@ -130,6 +129,18 @@ function source_all() {
     [ -n "$DOMAIN" ] && source_some "$DOMAIN/$file"
     [ -n "$MACHINE" ] && source_some "$MACHINE/$file"
     [ -n "$MACHINE" ] && source_some "$MACHINE/$file"
+}
+
+function find_file() {
+    local file="$1"
+    RESULT=""
+
+    for f in $HOME/{.private/,.home/,}{$MACHINE/,$DOMAIN/,$SYSTEM/,}$file; do
+	if [ -f "$f" ]; then
+	    echo "$f"
+	    break;
+	fi
+    done
 }
 
 # Pickup system-specific .bashrc files
@@ -253,3 +264,45 @@ source_all .bash_aliases
 # }
 # 
 # alias cd=cd_func
+if [ -z "$TMUX" -a "$TERM" = "xterm" ]; then
+    export TERM=xterm-256color
+fi
+
+# Powerline setup
+if [ -d ~/.local/bin ]; then
+    export PATH="$PATH:~/.local/bin"
+fi
+
+# Enable powerline, if found.
+if test -z "$POWERLINE_DIR" && powerline-daemon -q -r; then
+    POWERLINE=`which powerline 2>/dev/null`
+    PYTHON_VER=$(python -V 2>&1 | sed 's/[^0-9]*\([0-9]*\.[0-9]*\).*/\1/')
+    POWERLINE_DIR=$(dirname $(dirname $POWERLINE))
+    POWERLINE_CONFIG_COMMAND=$POWERLINE_DIR/bin/powerline-config
+    POWERLINE_DIR=$POWERLINE_DIR/lib/python${PYTHON_VER}/site-packages/powerline
+    POWERLINE_SCRIPT=$POWERLINE_DIR/bindings/bash/powerline.sh
+    if [ -f $POWERLINE_SCRIPT ]; then
+	. $POWERLINE_SCRIPT
+    fi
+    unset PYTHON_VER POWERLINE_SCRIPT
+    export POWERLINE_CONFIG_COMMAND POWERLINE_DIR
+fi
+unset POWERLINE
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+# Add local user bin path
+#
+# This is a somewhat strange configuration, but it's how things were
+# pre-configured at an employer, with there being a ~/bin/bin.<ARCH>
+# directory for specific architectures and it worked since your home
+# directory was shared between Windows, Linux, Mac, and other systems.
+#
+# Basically it's like using ~/bin as the GNU --prefix and
+# ~/bin/(s)bin.<ARCH> as the --(s)bindir.
+case `uname` in
+    CYGWIN_*-WOW) ARCH=cygwin.x86 ;;
+
+    *) ARCH=x86_64 ;;
+esac
+export PATH="~/bin/bin.$ARCH:$PATH"

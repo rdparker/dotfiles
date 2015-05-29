@@ -21,3 +21,7 @@ alias vdir='ls --color=auto --format=long'
 alias ll='ls -l'                              # long list
 alias la='ls -A'                              # all but . and ..
 alias l='ls -CF'                              # column-wise
+
+# tmux
+TMUX_CONF=`find_file .tmux.conf`
+alias tmux='\tmux -L '"$USER"' -f '"$TMUX_CONF"' a || \tmux -L '"$USER"' -f '"$TMUX_CONF"

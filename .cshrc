@@ -146,7 +146,9 @@ setenv PERL5LIB $HOME/perl5/lib/perl5:$PERL5LIB;
 setenv POWERLINE_DIR /u/pron/.local/lib/python2.7/site-packages/powerline
 
 if ( ! $?prompt ) exit
+if ! $?DOMAIN setenv DOMAIN `domainname`
 if ( -f ~/.aliases ) source ~/.aliases
+if ( -f ~/.private/$DOMAIN/.aliases ) source ~/.private/$DOMAIN/.aliases
 
 # rdp - pron - remove non-existent stuff from path and update it
 set newpath =()
