@@ -4,11 +4,23 @@
 #
 # 22-May-2015 - Add aliases for toggling between Dvorak and US layouts
 #		Add color and ls aliases
-#
-alias aoeu='setxkbmap us'
-alias ar.g='setxkbmap us'
-alias asdf='setxkbmap dvorak'
 
+# Editor
+[ -n "$DISPLAY" ] && SWITCH=-c || SWITCH=-t
+alias e='emacsclient -a ""'" $SWITCH"
+unset SWITCH
+
+# Keyboard layout switching.  This allows me to hit the for home row
+# characters under the left hand to switch keyboard layouts, even if
+# the computer has been set to Dvorak and a Dvorak keyboard is
+# plugged in.
+if [ -n "$DISPLAY" ]; then
+    alias aoeu='setxkbmap us'
+    alias ar.g='setxkbmap us'
+    alias asdf='setxkbmap dvorak'
+fi
+
+# Colorize things
 alias less='less -r'                          # raw control characters
 alias grep='grep --color'                     # show differences in colour
 alias egrep='egrep --color=auto'              # show differences in colour
@@ -25,3 +37,4 @@ alias l='ls -CF'                              # column-wise
 # tmux
 TMUX_CONF=`find_file .tmux.conf`
 alias tmux='\tmux -L '"$USER"' -f '"$TMUX_CONF"' a || \tmux -L '"$USER"' -f '"$TMUX_CONF"
+unset TMUX_CONF
