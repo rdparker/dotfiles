@@ -1,7 +1,17 @@
 #!/bin/bash
-emacsclient -n -e "(progn
-		    (save-some-buffers t)
-		    (dolist (client server-clients)
-		      (server-delete-client client))
-		    (setq desktop-save t)
-		    (kill-emacs))"
+#
+# Kill a running emacs daemon, saving any unsaved files, deleting any
+# server clients, and saving the desktop before finally killing emacs.
+#
+# Defaults to not waiting for the client to complete, but if an
+# argument is passed, it will be passed to emacsclient.  This may be
+# used to run it in either tty or new-frame mode by passing either
+# '-t' or '-c'.
+MODE=${1:-n}
+
+emacsclient $MODE -e "(progn
+			(save-some-buffers t)
+			(dolist (client server-clients)
+			  (server-delete-client client))
+			(setq desktop-save t)
+			(kill-emacs))"
