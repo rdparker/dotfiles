@@ -7,7 +7,7 @@
 # argument is passed, it will be passed to emacsclient.  This may be
 # used to run it in either tty or new-frame mode by passing either
 # '-t' or '-c'.
-MODE=${1:-n}
+MODE=${1:--n}
 
 emacsclient $MODE -e "(progn
 			(save-some-buffers t)
