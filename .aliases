@@ -1,1 +1,17 @@
+# -*- mode: sh; -*-
+
+# Colorize things
+alias less \\less -r
+alias grep \\grep --color
+alias egrep \\egrep --color=auto
+alias fgrep \\fgrep --color=auto
+
+# Some shortcuts for different directory listings
+alias ls \\ls -hF --color=tty
+alias dir ls --color=auto --format=vertical
+alias vdir ls --color=auto --format=long
+alias ll ls -l
+alias la ls -A
+alias l ls -CF
+
 alias tmux \\tmux -L $user a \|\| \\tmux -L $user
