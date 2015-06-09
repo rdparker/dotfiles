@@ -1,0 +1,7 @@
+#!/bin/bash
+emacsclient -n -e "(progn
+		    (save-some-buffers t)
+		    (dolist (client server-clients)
+		      (server-delete-client client))
+		    (setq desktop-save t)
+		    (kill-emacs))"

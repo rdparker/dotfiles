@@ -12,4 +12,6 @@
 !.login
 !.profile
 !README
+!bin/
+!bin/kill-emacs
 *~
