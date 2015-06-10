@@ -97,7 +97,10 @@ unset TITLE
 #
 # Get operating system and machine name values for looking up
 # system-specific scripts.
-SYSTEM=${SYSTEM:-`uname -o | tr [A-Z/] [a-z-]`}
+case `uname` in
+    MINGW32*) SYSTEM=mingw32 ;;	# git bash's mingw32 does not support uname -o
+    *) SYSTEM=${SYSTEM:-`uname -o | tr [A-Z/] [a-z-]`} ;;
+esac
 if type domainname 2>&1 > /dev/null; then
     DOMAIN=${DOMAIN:-`domainname | tr [A-Z/] [a-z-]`}
     MACHINE=${MACHINE:-`domainname -s | tr [A-Z/] [a-z-]`}
