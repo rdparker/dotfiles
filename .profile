@@ -3,12 +3,12 @@
 #
 set -ha
 umask 022
-stty istrip
+which stty > /dev/null && stty istrip
 PATH=/bin:/usr/bin:/usr/sbin:/usr/ucb:/etc:/netapp/bin:/netapp/gnu/bin:/usr/ccs/bin:/usr/software/bin:/usr/software/utils/bin:/usr/software/rats/bin:/usr/software/test/bin:.
 LD_LIBRARY_PATH=/usr/lib:/netapp/gnu/lib:/usr/ucblib:/usr/local/lib
 ENV=$HOME/.kshrc
 EDITOR=vi
-stty erase '^H'
+which stty > /dev/null && stty erase '^H'
 
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the 
@@ -36,7 +36,7 @@ stty erase '^H'
 # User dependent .profile file
 
 # Set user-defined locale
-export LANG=$(locale -uU)
+which locale > /dev/null && export LANG=$(locale -uU)
 
 # This file is not read by bash(1) if ~/.bash_profile or ~/.bash_login
 # exists.

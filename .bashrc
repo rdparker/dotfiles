@@ -101,10 +101,14 @@ case `uname` in
     MINGW32*) SYSTEM=mingw32 ;;	# git bash's mingw32 does not support uname -o
     *) SYSTEM=${SYSTEM:-`uname -o | tr [A-Z/] [a-z-]`} ;;
 esac
-if type domainname 2>&1 > /dev/null; then
+if type domainname > /dev/null 2>&1 ; then
     DOMAIN=${DOMAIN:-`domainname | tr [A-Z/] [a-z-]`}
     MACHINE=${MACHINE:-`domainname -s | tr [A-Z/] [a-z-]`}
     FQDN=${FQDN:-`domainname -f | tr [A-Z/] [a-z-]`}
+elif [ x"$SYSTEM"x == xmingw32x ] ; then
+    DOMAIN=${USERDNSDOMAIN}
+    MACHINE=${COMPUTERNAME}
+    FQDN=${MACHINE}.${DOMAIN}
 fi
 
 # If a file exists, source it.
@@ -277,7 +281,7 @@ if [ -d ~/.local/bin ]; then
 fi
 
 # Enable powerline, if found.
-if test -z "$POWERLINE_DIR" && powerline-daemon -q -r; then
+if test -z "$POWERLINE_DIR" && powerline-daemon -q -r > /dev/null 2>&1; then
     POWERLINE=`which powerline 2>/dev/null`
     PYTHON_VER=$(python -V 2>&1 | sed 's/[^0-9]*\([0-9]*\.[0-9]*\).*/\1/')
     POWERLINE_DIR=$(dirname $(dirname $POWERLINE))
