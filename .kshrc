@@ -8,8 +8,7 @@ else
 fi
 
 # Set up the command line prompt
-
-PS1="`uname -n`{`$WHOAMI`}: "
+PS1="`uname -n`{${USERNAME:-`$WHOAMI`}}: "
 
 # Alias definitions
 
