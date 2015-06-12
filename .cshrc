@@ -57,8 +57,10 @@ if (-d $RHEL_PATH ) then
 endif
 
 if (! $?WINPATH) then
-        setenv WINPATH ""
-        foreach D (`cat ~/.openwinhome`)
+	setenv WINPATH ""
+
+	if( -f ~/.openwinhome ) then
+	    foreach D (`cat ~/.openwinhome`)
                 if (-d $D) then
                         setenv OPENWINHOME $D
                         setenv WINPATH "$D/bin $D/bin/xview"
@@ -66,7 +68,8 @@ if (! $?WINPATH) then
                         set path = ($path $WINPATH)
                         break
                 endif
-        end
+	    end
+	endif
 endif
 
         if ($?LD_LIBRARY_PATH) then
