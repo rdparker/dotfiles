@@ -215,5 +215,8 @@ if ( x$EDITOR =~ xemacsclient ) then
 endif
 a e "$EDITOR \!*"
 
-top -b -n 1 | head -1 | egrep --color '([1-9][0-9]\.[0-9][0-9]|[3-9]\.[0-9][0-9])' || \
+# If we are in an ssh connection, display the system load.
+if( $?SSH_TTY ) then
+    top -b -n 1 | head -1 | egrep --color '([1-9][0-9]\.[0-9][0-9]|[3-9]\.[0-9][0-9])' || \
 	top -b -n 1 | head -1
+endif
