@@ -198,8 +198,9 @@ foreach D ( `echo $MANPATH | tr '[:]' '[ ]'` )
     endif
 end
 setenv MANPATH $manpath
-# Uniquify MANPATH
-setenv MANPATH `manpath`
+# Uniquify MANPATH ignoring the warning about MANPATH being set.
+# That is expected.
+setenv MANPATH `manpath |& sed '/manpath.*warning/d'`
 unset manpath
 unset D
 unset M
