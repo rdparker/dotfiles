@@ -1,0 +1,46 @@
+#!/bin/sh
+# default settings
+[ -x /usr/bin/xdg-user-dirs-gtk-update ] && /usr/bin/xdg-user-dirs-gtk-update
+[ -x /usr/bin/gsettings-data-convert ] && /usr/bin/gsettings-data-convert
+
+if [ -x /usr/libexec/mate-notification-daemon ] ; then
+	/usr/libexec/mate-notification-daemon &
+elif [ -x /usr/libexec/notification-daemon ] ; then
+	/usr/libexec/notification-daemon &
+elif [ -x /usr/lib/xfce4/notifyd/xfce4-notifyd ] ; then
+	/usr/lib/xfce4/notifyd/xfce4-notifyd &
+elif [ -x /usr/bin/lxqt-notificationd ] ; then
+	/usr/bin/lxqt-notificationd &
+fi
+
+if [ -x /usr/bin/start-pulseaudio-x11 ] ; then
+	/usr/bin/start-pulseaudio-x11
+if [ -x /usr/bin/pasystray ] ; then
+	/usr/bin/pasystray &
+elif [ -x /usr/bin/mate-volume-control-applet ] ; then
+	/usr/bin/mate-volume-control-applet &
+fi
+fi
+
+if [ -x /usr/bin/gnome-keyring-daemon ] ; then
+	eval `/usr/bin/gnome-keyring-daemon --start`
+	export GNOME_KEYRING_CONTROL GPG_AGENT_INFO SSH_AUTH_SOCK
+fi
+
+[ -x /usr/bin/krb5-auth-dialog ] && /usr/bin/krb5-auth-dialog &
+
+if [ -x /usr/libexec/evolution/3.12/evolution-alarm-notify ] ; then
+	/usr/libexec/evolution/3.12/evolution-alarm-notify &
+elif [ -x /usr/libexec/evolution/3.10/evolution-alarm-notify ] ; then
+	/usr/libexec/evolution/3.10/evolution-alarm-notify &
+fi
+
+[ -x /usr/bin/seahorse-sharing ] && /usr/bin/seahorse-sharing &
+[ -x /usr/bin/zeitgeist-datahub ] && /usr/bin/zeitgeist-datahub &
+if [ -x /usr/bin/xfce4-terminal ] ; then
+	/usr/bin/xfce4-terminal &
+elif [ -x /usr/bin/xterm ] ; then
+    /usr/bin/xterm &
+fi
+[ -x /usr/bin/fbxkb ] && /usr/bin/fbxkb &
+[ -x /usr/bin/fbpanel ] && exec /usr/bin/fbpanel -p multiwindow
