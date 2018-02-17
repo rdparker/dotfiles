@@ -290,3 +290,9 @@ if test -z "$POWERLINE_DIR" && powerline-daemon -q -r > /dev/null 2>&1; then
     export POWERLINE_CONFIG_COMMAND POWERLINE_DIR
 fi
 unset POWERLINE
+
+# If running the Windows Subsystem for Linux (WSL), assume there is an separate
+# X Windows Server running.  I typically use MobaXterm Personal.
+case `uname -r` in
+    *-Microsoft) export DISPLAY=:0;;
+esac
