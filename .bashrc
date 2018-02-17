@@ -275,11 +275,6 @@ if [ -z "$TMUX" -a "$TERM" = "xterm" ]; then
     export TERM=xterm-256color
 fi
 
-# Powerline setup
-if [ -d ~/.local/bin ]; then
-    export PATH="$PATH:~/.local/bin"
-fi
-
 # Enable powerline, if found.
 if test -z "$POWERLINE_DIR" && powerline-daemon -q -r > /dev/null 2>&1; then
     POWERLINE=`which powerline 2>/dev/null`
@@ -295,21 +290,3 @@ if test -z "$POWERLINE_DIR" && powerline-daemon -q -r > /dev/null 2>&1; then
     export POWERLINE_CONFIG_COMMAND POWERLINE_DIR
 fi
 unset POWERLINE
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-# Add local user bin path
-#
-# This is a somewhat strange configuration, but it's how things were
-# pre-configured at an employer, with there being a ~/bin/bin.<ARCH>
-# directory for specific architectures and it worked since your home
-# directory was shared between Windows, Linux, Mac, and other systems.
-#
-# Basically it's like using ~/bin as the GNU --prefix and
-# ~/bin/(s)bin.<ARCH> as the --(s)bindir.
-case `uname` in
-    CYGWIN_*-WOW) ARCH=cygwin.x86 ;;
-
-    *) ARCH=x86_64 ;;
-esac
-export PATH="~/bin/bin.$ARCH:$PATH"

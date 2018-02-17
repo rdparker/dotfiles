@@ -38,6 +38,34 @@ which stty > /dev/null && stty erase '^H'
 # Set user-defined locale
 which locale > /dev/null && export LANG=$(locale -uU)
 
+# Powerline setup
+if [ -d ~/.local/bin ]; then
+    PATH="$PATH:~/.local/bin"
+fi
+
+# Add RVM to PATH for scripting
+if [ -d ~/.rvm/bin ]; then
+    PATH="$PATH:$HOME/.rvm/bin"
+fi
+
+# Add local user bin path
+#
+# This is a somewhat strange configuration, but it's how things were
+# pre-configured at an employer, with there being a ~/bin/bin.<ARCH>
+# directory for specific architectures and it worked since your home
+# directory was shared between Windows, Linux, Mac, and other systems.
+#
+# Basically it's like using ~/bin as the GNU --prefix and
+# ~/bin/(s)bin.<ARCH> as the --(s)bindir.
+case `uname` in
+    CYGWIN_*-WOW) ARCH=cygwin.x86 ;;
+
+    *) ARCH=x86_64 ;;
+esac
+if [ -d ~/bin/bin.$ARCH ]; then
+    PATH="~/bin/bin.$ARCH:$PATH"
+fi
+
 # This file is not read by bash(1) if ~/.bash_profile or ~/.bash_login
 # exists.
 #
