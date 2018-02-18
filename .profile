@@ -1,7 +1,7 @@
 #
 # @(#)local.profile 1.4 93/09/15 SMI
 #
-set -ha
+set -h
 umask 022
 which stty > /dev/null && stty istrip
 PATH=/bin:/usr/bin:/usr/sbin:/usr/ucb:/etc:/netapp/bin:/netapp/gnu/bin:/usr/ccs/bin:/usr/software/bin:/usr/software/utils/bin:/usr/software/rats/bin:/usr/software/test/bin:.
