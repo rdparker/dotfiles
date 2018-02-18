@@ -36,7 +36,9 @@ which stty > /dev/null && stty erase '^H'
 # User dependent .profile file
 
 # Set user-defined locale
-which locale > /dev/null && export LANG=$(locale -uU)
+#
+# Some locale commands have a -uU switch, others do not. Handle both cases.
+which locale > /dev/null && export LANG=$(locale -uU 2>/dev/null || locale | grep LANG=)
 
 # Powerline setup
 if [ -d ~/.local/bin ]; then
