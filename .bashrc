@@ -296,3 +296,8 @@ unset POWERLINE
 case `uname -r` in
     *-Microsoft) export DISPLAY=:0;;
 esac
+
+# Enable git subrepo, if available
+if [ -r ~/lib/git-subrepo/.rc ]; then
+    source ~/lib/git-subrepo/.rc
+fi
