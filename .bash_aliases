@@ -37,6 +37,6 @@ alias l='ls -CF'                              # column-wise
 # tmux
 TMUX_CMD='\tmux -L '"$USER"
 TMUX_CONF=`find_file .tmux.conf`
-[[ -n "$TMUX_CONF" ]] && TMUX_CMD="$TMUX_CMD" -f '"$TMUX_CONF"'
+[ -n "$TMUX_CONF" ] && TMUX_CMD="$TMUX_CMD"\ -f\ '"$TMUX_CONF"'
 alias tmux="$TMUX_CMD attach || $TMUX_CMD"
 unset TMUX_CMD TMUX_CONF
