@@ -80,3 +80,6 @@ fi
 
 export PATH ENV EDITOR LD_LIBRARY_PATH
 . ${ENV}
+if [ -e /Users/pron/.nix-profile/etc/profile.d/nix.sh ]; then
+    source /Users/pron/.nix-profile/etc/profile.d/nix.sh
+fi
