@@ -20,18 +20,16 @@ if (! $?ignore) then
 	echo "The ~/.home directory already exists."
 	exit 1
     else
-	git clone --no-checkout --config core.workdir=../../ https://github.com/rdparker/dotfiles .home
+	git clone --bare https://github.com/rdparker/dotfiles $HOME/.home
     endif
 endif
 
-# Tell the home directory to use this cloned repository.
-cd .home/
-echo gitdir: `pwd`/.git > ~/.git
-cd ~
+# Define the alias in the current scope.
+alias dotgit env git --git-dir=$HOME/.home/ --work-tree=$HOME
 
 # Checkout what we can without overwriting any existing files.
-git reset --keep
-git status --porcelain | awk '/^ D/{print $2}' | xargs git checkout --
+dotgit reset --keep
+dotgit status --porcelain | awk '/^ D/{print $2}' | xargs dotgit checkout --
 
 # Report any files that were not checked out.
-git status --short
+dotgit status --short
