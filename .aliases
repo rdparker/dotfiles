@@ -15,3 +15,6 @@ alias la ls -A
 alias l ls -CF
 
 alias tmux \\tmux -L $user a \|\| \\tmux -L $user
+
+# dotgit - My solution for maintaining my configuration files in git.
+alias dotgit env git --git-dir=$HOME/.home/ --work-tree=$HOME

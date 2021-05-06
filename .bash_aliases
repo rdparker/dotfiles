@@ -40,3 +40,6 @@ TMUX_CONF=`find_file .tmux.conf`
 [ -n "$TMUX_CONF" ] && TMUX_CMD="$TMUX_CMD"\ -f\ "$TMUX_CONF"
 alias tmux="$TMUX_CMD attach || $TMUX_CMD"
 unset TMUX_CMD TMUX_CONF
+
+# dotgit - My solution for maintaining my configuration files in git.
+alias dotgit='env git --git-dir=$HOME/.home/ --work-tree=$HOME'

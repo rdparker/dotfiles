@@ -1,0 +1,271 @@
+#+TITLE: Dotfiles
+
+Once upon a time I had [[https://github.com/rdparker/dotfiles/tree/464084e85316ec2c858d04446ecda9c478ccd4bb][a custom solution]] for storing my dotfiles and home
+directory content in git. I recall it was clumsy and may have interfered with
+git commands in lower-level directories, since the it was cloned into =~/.home=
+home directory contained the following ~.git~:
+
+#+begin_src
+gitdir: <...>/.home/git
+#+end_src
+
+Many people have addressed the subject of how to store these files since then
+including the article [[https://www.atlassian.com/git/tutorials/dotfiles][The best way to store your dotfiles: A bare Git repository]]
+at Atlassian.  I am going to try their method and see how it works out.
+
+* The Bare Git Repository method
+
+#+begin_quote
+The technique consists in storing a [[http://www.saintsjd.com/2011/01/what-is-a-bare-git-repository/][Git bare repository]] in a "side" folder (like
+=$HOME/.cfg= or =$HOME/.myconfig=) using a specially crafted alias so that commands
+are run against that repository and not the usual =.git= local folder, which would
+interfere with any other Git repositories around.
+#+end_quote
+
+In my custom solution the repo was in =$HOME/.home= and I will stick with that
+for the new solution.
+
+Atlassian's recommended setup is:
+
+#+begin_src bash
+git init --bare $HOME/.cfg
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+config config --local status.showUntrackedFiles no
+echo "alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> $HOME/.bashrc
+#+end_src
+
+* My Adaptation
+
+I will update this for my own environments which include macOS, the Windows
+Linux Subsystem, aka [[https://ubuntu.com/tutorials/ubuntu-on-windows][Ubuntu on Windows]], and various Linux installs, some of
+which default to C Shell, csh.
+
+As mentioned above, the bare repository will go in ~$HOME/.home~.
+
+# The blank line below is necessary to get all the lines highlighted properly
+# when exported to HTML.
+
+#+begin_src diff
+-git init --bare $HOME/.cfg
+-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
++git init --bare $HOME/.home
++alias config='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'
+ config config --local status.showUntrackedFiles no
+-echo "alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> $HOME/.bashrc
++echo "alias config='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'" >> $HOME/.bashrc
+
+#+end_src
+
+Using a ~config~ alias sounds like it could be used for configuring any number
+of things. Others have used things like ~dgit~ for an alias. I think ~dotgit~ is
+rather more semantic and will use it.
+
+#+begin_src diff
+ git init --bare $HOME/.home
+-alias config='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'
+-config config --local status.showUntrackedFiles no
+-echo "alias config='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'" >> $HOME/.bashrc
++alias dotgit='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'
++dotgit config --local status.showUntrackedFiles no
++echo "alias dotgit='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'" >> $HOME/.bashrc
+
+#+end_src
+
+The next issue is that I use a number of different systems including some based
+upon [[https://nixos.org][nix]], which places commands in totally non-standard locations with strange
+paths and symlinks. The simple solution is to assume ~git~ is in ~PATH~ and use
+~env~ to resolve its location.
+
+#+begin_src diff
+ git init --bare $HOME/.home
+-alias dotgit='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'
++alias dotgit='env git --git-dir=$HOME/.home/ --work-tree=$HOME'
+ dotgit config --local status.showUntrackedFiles no
+-echo "alias dotgit='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'" >> $HOME/.bashrc
++echo "alias dotgit='env git --git-dir=$HOME/.home/ --work-tree=$HOME'" >> $HOME/.bashrc
+
+#+end_src
+
+The path to my home directory can vary. So, I do not want to hardcode an
+absolute path in any of my script or alias files.
+#+begin_src diff
+ git init --bare $HOME/.home
+ alias dotgit='env git --git-dir=$HOME/.home/ --work-tree=$HOME'
+ dotgit config --local status.showUntrackedFiles no
+-echo "alias dotgit='/usr/bin/git --git-dir=$HOME/.home/ --work-tree=$HOME'" >> $HOME/.bashrc
++echo "alias dotgit='/usr/bin/git --git-dir=\$HOME/.home/ --work-tree=\$HOME'" >> $HOME/.bashrc
+
+#+end_src
+
+Finally, the environment or organization where I am working often forces me to
+use different shells, including ~csh~. Depending upon the shell, there are at
+least two different forms for defining an alias and some shells share the same
+format. In my old configuration, this lead to having two alias definition files,
+=~/.aliases= and =~/.bash_aliases=, which were included sourced by shell
+configuration files as appropriate. There were also some aliases defined
+directly within the shell config files. I will try to maintain this going
+forward.
+
+#+begin_src diff
+ git init --bare $HOME/.home
+ alias dotgit='env git --git-dir=$HOME/.home/ --work-tree=$HOME'
+ dotgit config --local status.showUntrackedFiles no
+-echo "alias dotgit='env git --git-dir=\$HOME/.home/ --work-tree=\$HOME'" >> \$HOME/.bashrc
++echo "alias dotgit='env git --git-dir=\$HOME/.home/ --work-tree=\$HOME'" >> \$HOME/.bash_aliases
++echo "alias dotgit env git --git-dir=\$HOME/.home/ --work-tree=\$HOME" >> \$HOME/.aliases
+
+#+end_src
+
+That last line may have to change when I can test it and I may have to change
+some rc files, but that should be a good start.
+
+** Fully Updated Snippet
+
+The fully updated snippet looks like this:
+
+#+begin_src bash
+git init --bare \$HOME/.home
+alias dotgit='env git --git-dir=\$HOME/.home/ --work-tree=\$HOME'
+dotgit config --local status.showUntrackedFiles no
+echo "alias dotgit='env git --git-dir=\\$HOME/.home/ --work-tree=\\$HOME'" >> \$HOME/.bash_aliases
+echo "alias dotgit env git --git-dir=\\$HOME/.home/ --work-tree=\\$HOME" >> \$HOME/.aliases
+#+end_src
+
+
+* Migrating My Old Setup
+
+I started by cloning my old setup and creating a branch to work on.
+
+#+begin_src bash
+git clone https://github.com/rdparker/dotfiles.git ~/src/github.com/rdparker/dotfiles
+git checkout -b dotgit
+#+end_src
+
+** Add the aliases
+
+The aliases need to be added before cloning the repository into its final location.
+
+#+begin_src bash
+cd ~/src/github.com/rdparker/dotfiles
+echo "alias dotgit='env git --git-dir=\$HOME/.home/ --work-tree=\$HOME'" >> .bash_aliases
+echo "alias dotgit env git --git-dir=\$HOME/.home/ --work-tree=\$HOME" >> .aliases
+#+end_src
+
+I actually edited the alias files a bit since my alias files have sections.
+
+** Updating ~.gitignore~
+
+This new setup uses ~status.showUntrackedFiles no~.  So, I don't need my old
+~.gitignore~ file, but ignore the directory where it will be cloned needs to be
+added to the file.
+
+#+begin_src bash
+echo ".home" > .gitignore
+#+end_src
+
+** Updating the setup script
+
+A lot had to change here and more may need to change, but much of it will be
+repeated in the next section.
+
+** Removing git-subrepo
+
+I can't remember why I included =git-subrepo= in my configuration, but it
+doesn't look like I ever used it.  While I have some old git submodules laying
+around, I prefer using git subtrees and a third option really does not seem
+necessary.  So, goodbye git subrepo.
+
+#+begin_src bash
+git rm -r lib/git-subrepo
+git commit -a -m 'Remove git-subrepo'
+#+end_src
+
+
+** Priming the first system
+
+Since the repo has not been pushed to github and the changes are currently on a
+separate branch, I cannot just clone things the way I normally would.
+
+#+begin_src bash
+git clone --bare . $HOME/.home
+#+end_src
+
+But the standard alias should be fine.
+
+#+begin_src bash
+alias dotgit="env git --git-dir=$HOME/.home/ --work-tree=$HOME"
+dotgit config --local status.showUntrackedFiles no
+#+end_src
+
+Next checkout what we can without overwriting any existing files.  This is done
+from the home directory so that the checkout can work with relative file paths.
+It also gets a little trick since xargs cannot use the dotgit alias.
+
+#+begin_src bash
+cd $HOME
+dotgit reset --keep
+DOTGIT="/usr/bin/env git --git-dir=$HOME/.home/ --work-tree=$HOME"
+dotgit status --porcelain | awk '/^ D/{print $2}' | eval xargs $DOTGIT checkout --
+#+end_src
+
+Then see what if anything may need to be updated.
+
+#+begin_src bash
+dotgit status --short
+#+end_src
+
+On the machine where I did this, the only conflict was in ~.profile~:
+
+#+begin_src diff
+-export PATH ENV EDITOR LD_LIBRARY_PATH
+-. ${ENV}
++. ~/.nix-profile/etc/profile.d/nix.sh
+
+#+end_src
+
+So,
+
+#+begin_src bash
+dotgit checkout -- .profile
+cat - >> .profile <<EOF
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then
+    source $HOME/.nix-profile/etc/profile.d/nix.sh
+fi
+EOF
+#+end_src
+
+Configure git for committing to the repo.
+
+#+begin_src bash
+dotgit config user.name 'Ron Parker'
+dotgit config user.email 'rdparker@gmail.com'
+#+end_src
+
+Then commit the changes.
+
+#+begin_src bash
+dotgit commit -a -m 'Source the nix setup, if present'
+#+end_src
+
+I'm sure there is plenty in this config which is stale, but I can update that
+as I go along.
+
+For one, I don't like the way the combination of the old system and the new
+checks some files out into the ~.home~ directory itself.  This should only
+contain the bare repository.
+
+** Installing the dotfiles on a new system
+
+Installing on a new system is as easy as
+
+#+begin_src bash
+curl https://raw.githubusercontent.com/rdparker/dotfiles/master/.home_files/setup.csh | csh
+#+end_src
+
+or
+
+#+begin_src bash
+wget -O -https://raw.githubusercontent.com/rdparker/dotfiles/master/.home_files/setup.csh | csh
+#+end_src
+
+Be sure to restart the shell or add the alias the script displays.
