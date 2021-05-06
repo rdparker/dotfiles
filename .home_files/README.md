@@ -29,5 +29,8 @@ preexisting files that differ from the repo.
 It is up to the user to merge files which differ, to check in the
 merged files, and to push the changes to the original repository.
 
-There are more details in [dotfiles.org](file:dotfiles.org) from when I updated
-my configuration to use a bare repository.
+There are more details in [dotfiles.org](./dotfiles.org) or
+[.home_files/dotfiles.org](.home_files/dotfiles.org). One or the other should
+work depending upon which directory you are reading this from. It contains the
+notes an other info from when I updated my configuration to use a bare
+repository.
