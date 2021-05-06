@@ -33,3 +33,12 @@ dotgit status --porcelain | awk '/^ D/{print $2}' | xargs /usr/bin/env git --git
 
 # Report any files that were not checked out.
 dotgit status --short
+
+cat - >&2 <<EOF
+Either restart the shell or
+
+    source ~/.bash_aliases
+
+to gain access to the ~dotgit~ command.  It may be used in place of git when
+dealing with your home directory.
+EOF
