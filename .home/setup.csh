@@ -29,7 +29,7 @@ alias dotgit env git --git-dir=$HOME/.home/ --work-tree=$HOME
 
 # Checkout what we can without overwriting any existing files.
 dotgit reset --keep
-dotgit status --porcelain | awk '/^ D/{print $2}' | xargs dotgit checkout --
+dotgit status --porcelain | awk '/^ D/{print $2}' | xargs /usr/bin/env git --git-dir=$HOME/.home/ --work-tree=$HOME checkout --
 
 # Report any files that were not checked out.
 dotgit status --short
