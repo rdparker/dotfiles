@@ -13,6 +13,7 @@
 #       doing a direct checkout from github.  Rather copy the .home
 #       directory to them and run '.home/setup.csh -i'.
 #
+# TODO Correct the above command because setup.sh is not in .home.
 cd ~
 if (x$1 =~ x-i ) set ignore = true
 if (! $?ignore) then

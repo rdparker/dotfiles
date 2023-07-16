@@ -1,1 +1,11 @@
+*~
 .home
+.emacs*
+!.emacs.d/private
+/Documents/
+/Downloads/
+/Pictures/
+/Source/
+/annex-*/
+/org*/
+/src*/

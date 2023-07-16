@@ -19,6 +19,11 @@ or
 
 	wget -O -https://raw.githubusercontent.com/rdparker/dotfiles/master/.home_files/setup.csh | csh
 
+On Guix ~csh~ and ~curl~ are not installed by default, so create an
+alias and use ~wget~:
+
+    alias csh='guix shell tcsh -- csh'
+    wget -O - https://raw.githubusercontent.com/rdparker/dotfiles/master/.home_files/setup.csh | csh
 
 The script will create a bare clone of the repository and use an alias to check
 files out into the home directory.  The files will define the `dotgit` alias

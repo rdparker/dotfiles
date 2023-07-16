@@ -1,30 +1,26 @@
-# To the extent possible under law, the author(s) have dedicated all
-# copyright and related and neighboring rights to this software to the
-# public domain worldwide. This software is distributed without any warranty.
-# You should have received a copy of the CC0 Public Domain Dedication along
-# with this software.
-# If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+# Bash initialization for interactive non-login shells and
+# for remote shells (info "(bash) Bash Startup Files").
 
-# base-files version 4.2-3
+# Export 'SHELL' to child processes.  Programs such as 'screen'
+# honor it and otherwise use /bin/sh.
+export SHELL
 
-# ~/.bashrc: executed by bash(1) for interactive shells.
+# Make Flatpak apps visible to launcher
+export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
 
-# The latest version as installed by the Cygwin Setup program can
-# always be found at /etc/defaults/etc/skel/.bashrc
+if [[ $- != *i* ]]
+then
+    # We are being invoked from a non-interactive shell.  If this
+    # is an SSH session (as in "ssh host command"), source
+    # /etc/profile so we get PATH and other essential variables.
+    [[ -n "$SSH_CLIENT" ]] && source /etc/profile
 
-# Modifying /etc/skel/.bashrc directly will prevent
-# setup from updating it.
+    # Don't do anything else.
+    return
+fi
 
-# The copy in your home directory (~/.bashrc) is yours, please
-# feel free to customise it to create a shell
-# environment to your liking.  If you feel a change
-# would be benifitial to all, please feel free to send
-# a patch to the cygwin mailing list.
-
-# User dependent .bashrc file
-
-# If not running interactively, don't do anything
-[[ "$-" != *i* ]] && return
+# Source the system-wide file.
+source /etc/bashrc
 
 source ~/.kshrc
 
@@ -34,13 +30,22 @@ source ~/.kshrc
 # and consume no horizontal space on the screen as far as the shell is
 # concerned.  The rest of the codes should be explained in the "Xterm
 # Control Sequences" document.
-#
+# Adjust the prompt depending on whether we're in 'guix environment'.
+if [ -n "$GUIX_ENVIRONMENT" ]
+then
+    GUIXENV=" [env]"
+fi
+
 # If we are not in Emacs, set the window and icon title.
 if [ -z "$INSIDE_EMACS" ]; then
     TITLE="\[\e]0;\w\a\]"
 fi
-PS1="$TITLE"'\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ '
-unset TITLE
+PS1="$TITLE"'\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]'"$GUIXENV"'\n\$ '
+unset TITLE GUIXENV
+
+alias ls='ls -p --color=auto'
+alias ll='ls -l'
+alias grep='grep --color=auto'
 
 # Shell Options
 #
@@ -300,4 +305,15 @@ esac
 # Enable git subrepo, if available
 if [ -r ~/lib/git-subrepo/.rc ]; then
     source ~/lib/git-subrepo/.rc
+fi
+
+# Load Nix environment
+if [ -f /run/current-system/profile/etc/profile.d/nix.sh ]; then
+  . /run/current-system/profile/etc/profile.d/nix.sh
+fi
+
+#  Enable direnv, if present
+if command -v direnv &> /dev/null
+then
+    eval "$(direnv hook bash)"
 fi
