@@ -1,0 +1,39 @@
+# I am using the flatpak install of the Proton Mail Bridge and had
+# trouble finding the certificate on disk, but was able to dump it
+# using OpenSSL:
+#
+#  mkdir -p ~/.config/protonmail/bridge
+#  echo |
+#    guix shell openssl -- openssl s_client -starttls imap -connect 127.0.0.1:1143 -showcerts |
+#    sed -n '/BEGIN CERTIFICATE/,/END CERTIFICATE/p' > ~/.config/protonmail/bridge/cert.pem
+
+IMAPAccount pro
+Host 127.0.0.1
+Port 1143
+UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pro/ { print $(NF-2); exit; }'"
+PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pro/ { print $NF; exit; }'"
+SSLType STARTTLS
+CertificateFile ~/.config/protonmail/bridge/cert.pem
+
+IMAPStore pro-remote
+Account pro
+
+MaildirStore pro-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/pro/
+Inbox ~/.mail/pro/Inbox
+Trash ~/.mail/pro/Trash
+
+Channel pro
+Far :pro-remote:
+Near :pro-local:
+# Include everything
+Patterns * !"Drafts" !"All Mail"
+Sync All
+Create Both
+Remove Near
+Expunge Near
+SyncState *
+
+##########

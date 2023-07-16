@@ -1,6 +1,7 @@
 *~
 .home
 .emacs*
+.mail
 !.emacs.d/private
 /Documents/
 /Downloads/
