@@ -1,8 +1,9 @@
 *~
 .home
 .emacs*
-.mail
 !.emacs.d/private
+.mail/[^.]*/
+.mail/.notmuch/xapian/
 /Documents/
 /Downloads/
 /Pictures/
