@@ -1,0 +1,11 @@
+#! /run/current-system/profile/bin/env bash
+option=$(sudo guix shell efibootmgr -- efibootmgr | awk '/Windows Boot Manager/{gsub(/[^0-9]*/, "", $1); printf "%s", $1}')
+if [ -n "$option" ]; then
+    sudo guix shell efibootmgr -- efibootmgr -n $option
+else
+    echo "Error:  Windows Boot Manager not found in EFI." >&2
+    exit 1
+fi
+# Local Variables:
+# mode: sh
+# End:
